@@ -1,0 +1,101 @@
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --accent-color: #f093fb;
+  --bg-color: #0f0c29;
+  --sidebar-bg: #1a1645;
+  --player-bg: #0a0817;
+  --text-primary: #ffffff;
+  --text-secondary: #c4c4c4;
+  --text-placeholder: #888888;
+  --hover-bg: rgba(102, 126, 234, 0.15);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  background: radial-gradient(ellipse at top, rgba(102, 126, 234, 0.08), transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.08), transparent 50%);
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  border-right: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 48px;
+}
+
+.player-control {
+  height: 90px;
+  background: var(--player-bg);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
+}
