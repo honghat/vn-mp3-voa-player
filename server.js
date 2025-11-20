@@ -1,11 +1,18 @@
 import express from 'express';
 import cors from 'cors';
+import https from 'https';
+import http from 'http';
 import { ZingMp3 } from 'zingmp3-api-full-v2';
 
 const app = express();
-const PORT = 3000;
+const PORT = 3010;
 
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
 
 // Get Song Info & Stream
@@ -67,8 +74,6 @@ app.get('/api/radio-proxy', async (req, res) => {
     }
 
     try {
-        const https = require('https');
-        const http = require('http');
         const protocol = url.startsWith('https') ? https : http;
 
         protocol.get(url, (proxyRes) => {

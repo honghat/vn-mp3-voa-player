@@ -16,7 +16,7 @@ const ChartView = ({ onSongSelect, currentSong, onToggleFavorite, isFavorite }) 
     useEffect(() => {
         const fetchTop100 = async () => {
             try {
-                const res = await fetch('http://localhost:3000/api/top100');
+                const res = await fetch('http://localhost:3010/api/top100');
                 const data = await res.json();
 
                 if (data && data.data) {

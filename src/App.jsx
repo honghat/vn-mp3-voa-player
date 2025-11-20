@@ -11,7 +11,7 @@ import { Search, Heart } from 'lucide-react';
 import { storage } from './utils/storage';
 import Hls from 'hls.js';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3010/api';
 
 function App() {
   const [songs, setSongs] = useState([]);
