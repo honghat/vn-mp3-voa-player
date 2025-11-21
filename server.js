@@ -8,9 +8,9 @@ const app = express();
 const PORT = 3010;
 
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
+    origin: ["http://music.hat404.io.vn", "http://localhost:8080"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json());

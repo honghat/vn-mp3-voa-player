@@ -11,7 +11,7 @@ import { Search, Heart } from 'lucide-react';
 import { storage } from './utils/storage';
 import Hls from 'hls.js';
 
-const API_URL = 'http://localhost:3010/api';
+const API_URL = '/api';
 
 function App() {
   const [songs, setSongs] = useState([]);
@@ -249,6 +249,8 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Audio element thực tế để Player.jsx truy cập qua DOM */}
+      <audio ref={audioRef} style={{ display: 'none' }} />
       <div className="main-layout">
         <Sidebar currentView={currentView} onViewChange={setCurrentView} />
         <div className="content">
