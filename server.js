@@ -1,46 +1,3 @@
-// ===== RADIO CHANNELS =====
-const RADIO_CHANNELS = [
-    {
-        id: 'vov1',
-        name: 'VOV1 - Thời sự',
-        url: 'https://live.radiovietnam.vn/vov1',
-        description: 'Kênh thời sự tổng hợp',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov1.png'
-    },
-    {
-        id: 'vov2',
-        name: 'VOV2 - Văn hóa',
-        url: 'https://live.radiovietnam.vn/vov2',
-        description: 'Kênh văn hóa xã hội',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov2.png'
-    },
-    {
-        id: 'vov3',
-        name: 'VOV3 - Âm nhạc',
-        url: 'https://live.radiovietnam.vn/vov3',
-        description: 'Kênh âm nhạc giải trí',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov3.png'
-    },
-    {
-        id: 'vovgiao',
-        name: 'VOV Giao thông',
-        url: 'https://live.radiovietnam.vn/vovgt',
-        description: 'Kênh giao thông quốc gia',
-        thumbnail: 'https://static.hat404.io.vn/radio/vovgt.png'
-    },
-    {
-        id: 'vovfm',
-        name: 'VOV FM',
-        url: 'https://live.radiovietnam.vn/vovfm',
-        description: 'Kênh FM tổng hợp',
-        thumbnail: 'https://static.hat404.io.vn/radio/vovfm.png'
-    }
-];
-
-// Endpoint trả về danh sách kênh radio
-app.get('/api/radio-list', (req, res) => {
-    res.json({ channels: RADIO_CHANNELS });
-});
 import express from 'express';
 import cors from 'cors';
 import https from 'https';
@@ -140,7 +97,7 @@ const CACHE_MAX_SIZE = 10;
 
 // ===== PROXY AUDIO =====
 import axios from 'axios';
-app.get('/proxy_audio', async (req, res) => {
+app.get('/api/proxy_audio', async (req, res) => {
     try {
         const { id } = req.query;
         if (!id) {
@@ -188,7 +145,7 @@ app.get('/proxy_audio', async (req, res) => {
 });
 
 // ===== PROXY LYRIC =====
-app.get('/proxy_lyric', async (req, res) => {
+app.get('/api/proxy_lyric', async (req, res) => {
     try {
         const { id } = req.query;
         if (!id) {
@@ -226,7 +183,7 @@ app.get('/proxy_lyric', async (req, res) => {
 });
 
 // ===== STREAM_PCM (Tìm kiếm và trả về bài hát cho ESP32) =====
-app.get('/stream_pcm', async (req, res) => {
+app.get('/api/stream_pcm', async (req, res) => {
     try {
         const { song, artist = '' } = req.query;
         if (!song) {
@@ -235,13 +192,13 @@ app.get('/stream_pcm', async (req, res) => {
         const searchQuery = artist ? `${song} ${artist}` : song;
         const data = await ZingMp3.search(searchQuery);
         const songs = Array.isArray(data?.data?.songs) ? data.data.songs : [];
-        // Trả về 3 bài đầu tiên
-        const topSongs = songs.slice(0, 3);
+        // Trả về 5 bài đầu tiên
+        const topSongs = songs.slice(0, 5);
         const results = topSongs.map(songItem => ({
             title: songItem.title || song,
             artist: songItem.artistsNames || artist || 'Unknown',
-            audio_url: `/proxy_audio?id=${songItem.encodeId}`,
-            lyric_url: `/proxy_lyric?id=${songItem.encodeId}`,
+            audio_url: `/api/proxy_audio?id=${songItem.encodeId}`,
+            lyric_url: `/api/proxy_lyric?id=${songItem.encodeId}`,
             thumbnail: songItem.thumbnail || songItem.thumbnailM || '',
             duration: songItem.duration || 0,
             language: 'unknown'
@@ -254,7 +211,7 @@ app.get('/stream_pcm', async (req, res) => {
 });
 
 // ===== HEALTH CHECK =====
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
         cache_size: audioCache.size,
@@ -264,4 +221,63 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// ===== RADIO CHANNELS =====
+const RADIO_CHANNELS = [
+    {
+        id: 'vov1',
+        name: 'VOV1 - Thời sự',
+        url: 'https://live.radiovietnam.vn/vov1',
+        description: 'Kênh thời sự tổng hợp',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov1.png'
+    },
+    {
+        id: 'vov2',
+        name: 'VOV2 - Văn hóa',
+        url: 'https://live.radiovietnam.vn/vov2',
+        description: 'Kênh văn hóa xã hội',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov2.png'
+    },
+    {
+        id: 'vov3',
+        name: 'VOV3 - Âm nhạc',
+        url: 'https://live.radiovietnam.vn/vov3',
+        description: 'Kênh âm nhạc giải trí',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov3.png'
+    },
+    {
+        id: 'vovgiao',
+        name: 'VOV Giao thông',
+        url: 'https://live.radiovietnam.vn/vovgt',
+        description: 'Kênh giao thông quốc gia',
+        thumbnail: 'https://static.hat404.io.vn/radio/vovgt.png'
+    },
+    {
+        id: 'vovfm',
+        name: 'VOV FM',
+        url: 'https://live.radiovietnam.vn/vovfm',
+        description: 'Kênh FM tổng hợp',
+        thumbnail: 'https://static.hat404.io.vn/radio/vovfm.png'
+    }
+];
+
+// Endpoint trả về danh sách kênh radio
+app.get('/api/radio-list', (req, res) => {
+    res.json({ channels: RADIO_CHANNELS });
+});
+
+// Proxy phát radio qua id
+app.get('/api/radio-stream/:id', (req, res) => {
+    const channel = RADIO_CHANNELS.find(c => c.id === req.params.id);
+    if (!channel) return res.status(404).json({ error: 'Not found' });
+    const url = channel.url;
+    const protocol = url.startsWith('https') ? https : http;
+    protocol.get(url, (proxyRes) => {
+        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+        proxyRes.pipe(res);
+    }).on('error', (err) => {
+        console.error('Radio stream proxy error:', err);
+        res.status(500).json({ error: 'Failed to proxy radio stream' });
+    });
 });
