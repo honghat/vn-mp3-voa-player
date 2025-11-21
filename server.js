@@ -90,6 +90,135 @@ app.get('/api/radio-proxy', async (req, res) => {
     }
 });
 
+
+// ===== CACHE AUDIO =====
+const audioCache = new Map(); // {songId: Buffer}
+const CACHE_MAX_SIZE = 10;
+
+// ===== PROXY AUDIO =====
+import axios from 'axios';
+app.get('/proxy_audio', async (req, res) => {
+    try {
+        const { id } = req.query;
+        if (!id) {
+            return res.status(400).send('Missing id parameter');
+        }
+        // Lấy từ cache
+        if (audioCache.has(id)) {
+            const audioBuffer = audioCache.get(id);
+            res.set({
+                'Content-Type': 'audio/mpeg',
+                'Content-Length': audioBuffer.length,
+                'Accept-Ranges': 'bytes',
+                'Cache-Control': 'public, max-age=86400'
+            });
+            return res.send(audioBuffer);
+        }
+        // Nếu không có trong cache, download mới
+        const song = await ZingMp3.getSong(id);
+        const url = song?.data?.['128'];
+        if (!url) return res.status(404).send('Stream URL not found');
+        const audioResponse = await axios({
+            method: 'GET',
+            url,
+            responseType: 'arraybuffer',
+            timeout: 120000
+        });
+        const audioBuffer = Buffer.from(audioResponse.data);
+        // Giới hạn cache size
+        if (audioCache.size >= CACHE_MAX_SIZE) {
+            const firstKey = audioCache.keys().next().value;
+            audioCache.delete(firstKey);
+        }
+        audioCache.set(id, audioBuffer);
+        res.set({
+            'Content-Type': 'audio/mpeg',
+            'Content-Length': audioBuffer.length,
+            'Accept-Ranges': 'bytes',
+            'Cache-Control': 'public, max-age=86400'
+        });
+        res.send(audioBuffer);
+    } catch (error) {
+        console.error('Proxy audio error:', error.message);
+        res.status(500).send('Failed to proxy audio');
+    }
+});
+
+// ===== PROXY LYRIC =====
+app.get('/proxy_lyric', async (req, res) => {
+    try {
+        const { id } = req.query;
+        if (!id) {
+            return res.status(400).send('Missing id parameter');
+        }
+        const songLyric = await ZingMp3.getLyric(id);
+        const lyricData = songLyric?.data;
+        if (lyricData?.file) {
+            // Nếu có file LRC, tải về và trả về nội dung
+            const resp = await axios.get(lyricData.file);
+            res.set('Content-Type', 'text/plain; charset=utf-8');
+            return res.send(resp.data);
+        } else if (Array.isArray(lyricData?.sentences)) {
+            // Nếu có sentences, chuyển sang LRC format
+            let lrcContent = '';
+            lyricData.sentences.forEach(s => {
+                const words = s.words || [];
+                words.forEach(w => {
+                    const time = w.startTime || 0;
+                    const minutes = Math.floor(time / 60000);
+                    const seconds = Math.floor((time % 60000) / 1000);
+                    const ms = Math.floor((time % 1000) / 10);
+                    lrcContent += `[${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(2, '0')}]${w.data}\n`;
+                });
+            });
+            res.set('Content-Type', 'text/plain; charset=utf-8');
+            return res.send(lrcContent);
+        } else {
+            res.status(404).send('Lyric not found');
+        }
+    } catch (error) {
+        console.error('Proxy lyric error:', error.message);
+        res.status(404).send('Lyric not found');
+    }
+});
+
+// ===== STREAM_PCM (Tìm kiếm và trả về bài hát cho ESP32) =====
+app.get('/stream_pcm', async (req, res) => {
+    try {
+        const { song, artist = '' } = req.query;
+        if (!song) {
+            return res.status(400).json({ error: 'Missing song parameter' });
+        }
+        const searchQuery = artist ? `${song} ${artist}` : song;
+        const data = await ZingMp3.search(searchQuery);
+        const songs = Array.isArray(data?.data?.songs) ? data.data.songs : [];
+        // Trả về 3 bài đầu tiên
+        const topSongs = songs.slice(0, 3);
+        const results = topSongs.map(songItem => ({
+            title: songItem.title || song,
+            artist: songItem.artistsNames || artist || 'Unknown',
+            audio_url: `/proxy_audio?id=${songItem.encodeId}`,
+            lyric_url: `/proxy_lyric?id=${songItem.encodeId}`,
+            thumbnail: songItem.thumbnail || songItem.thumbnailM || '',
+            duration: songItem.duration || 0,
+            language: 'unknown'
+        }));
+        res.json({ count: results.length, songs: results });
+    } catch (error) {
+        console.error('stream_pcm error:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// ===== HEALTH CHECK =====
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        cache_size: audioCache.size,
+        cached_songs: Array.from(audioCache.keys())
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
