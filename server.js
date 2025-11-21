@@ -97,6 +97,7 @@ const CACHE_MAX_SIZE = 10;
 
 // ===== PROXY AUDIO =====
 import axios from 'axios';
+import { spawn } from 'child_process';
 app.get('/api/proxy_audio', async (req, res) => {
     try {
         const { id } = req.query;
@@ -279,12 +280,36 @@ app.get('/api/radio-stream/:id', (req, res) => {
     const channel = RADIO_CHANNELS.find(c => c.id === req.params.id);
     if (!channel) return res.status(404).json({ error: 'Not found' });
     const url = channel.url;
-    const protocol = url.startsWith('https') ? https : http;
-    protocol.get(url, (proxyRes) => {
-        res.writeHead(proxyRes.statusCode, proxyRes.headers);
-        proxyRes.pipe(res);
-    }).on('error', (err) => {
-        console.error('Radio stream proxy error:', err);
-        res.status(500).json({ error: 'Failed to proxy radio stream' });
+
+    // Set response headers for audio stream
+    res.set({
+        'Content-Type': 'audio/mpeg',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache'
+    });
+
+    // ffmpeg relay process
+    const ffmpeg = spawn('ffmpeg', [
+        '-i', url,
+        '-vn',
+        '-acodec', 'libmp3lame',
+        '-ab', '128k',
+        '-f', 'mp3',
+        'pipe:1'
+    ]);
+
+    ffmpeg.stdout.pipe(res);
+
+    ffmpeg.stderr.on('data', (data) => {
+        // Optional: log ffmpeg errors for debugging
+        // console.error(`ffmpeg stderr: ${data}`);
+    });
+
+    ffmpeg.on('close', (code) => {
+        res.end();
+    });
+
+    req.on('close', () => {
+        ffmpeg.kill('SIGKILL');
     });
 });
