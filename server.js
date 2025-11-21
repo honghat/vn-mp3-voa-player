@@ -1,3 +1,46 @@
+// ===== RADIO CHANNELS =====
+const RADIO_CHANNELS = [
+    {
+        id: 'vov1',
+        name: 'VOV1 - Thời sự',
+        url: 'https://live.radiovietnam.vn/vov1',
+        description: 'Kênh thời sự tổng hợp',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov1.png'
+    },
+    {
+        id: 'vov2',
+        name: 'VOV2 - Văn hóa',
+        url: 'https://live.radiovietnam.vn/vov2',
+        description: 'Kênh văn hóa xã hội',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov2.png'
+    },
+    {
+        id: 'vov3',
+        name: 'VOV3 - Âm nhạc',
+        url: 'https://live.radiovietnam.vn/vov3',
+        description: 'Kênh âm nhạc giải trí',
+        thumbnail: 'https://static.hat404.io.vn/radio/vov3.png'
+    },
+    {
+        id: 'vovgiao',
+        name: 'VOV Giao thông',
+        url: 'https://live.radiovietnam.vn/vovgt',
+        description: 'Kênh giao thông quốc gia',
+        thumbnail: 'https://static.hat404.io.vn/radio/vovgt.png'
+    },
+    {
+        id: 'vovfm',
+        name: 'VOV FM',
+        url: 'https://live.radiovietnam.vn/vovfm',
+        description: 'Kênh FM tổng hợp',
+        thumbnail: 'https://static.hat404.io.vn/radio/vovfm.png'
+    }
+];
+
+// Endpoint trả về danh sách kênh radio
+app.get('/api/radio-list', (req, res) => {
+    res.json({ channels: RADIO_CHANNELS });
+});
 import express from 'express';
 import cors from 'cors';
 import https from 'https';
