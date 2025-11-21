@@ -227,38 +227,45 @@ app.listen(PORT, () => {
 const RADIO_CHANNELS = [
     {
         id: 'vov1',
-        name: 'VOV1 - Thời sự',
-        url: 'https://live.radiovietnam.vn/vov1',
-        description: 'Kênh thời sự tổng hợp',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov1.png'
+        name: 'VOV1 - Kênh Thời sự',
+        url: 'https://stream.vovmedia.vn/vov1',
+        description: 'Đài Tiếng nói Việt Nam'
     },
     {
-        id: 'vov2',
-        name: 'VOV2 - Văn hóa',
-        url: 'https://live.radiovietnam.vn/vov2',
-        description: 'Kênh văn hóa xã hội',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov2.png'
+        id: 'vovgt',
+        name: 'VOV Giao thông Hà Nội FM 91MHz',
+        url: 'https://play.vovgiaothong.vn/live/gthn/playlist.m3u8',
+        description: 'Giao thông Hà Nội'
     },
     {
-        id: 'vov3',
-        name: 'VOV3 - Âm nhạc',
-        url: 'https://live.radiovietnam.vn/vov3',
-        description: 'Kênh âm nhạc giải trí',
-        thumbnail: 'https://static.hat404.io.vn/radio/vov3.png'
+        id: 'vohhcm',
+        name: 'VOH FM 87.7 - Nhịp sống Sài Gòn',
+        url: 'https://strm.voh.com.vn/radio/channel5/playlist.m3u8',
+        description: 'Voice of Ho Chi Minh City'
     },
     {
-        id: 'vovgiao',
-        name: 'VOV Giao thông',
-        url: 'https://live.radiovietnam.vn/vovgt',
-        description: 'Kênh giao thông quốc gia',
-        thumbnail: 'https://static.hat404.io.vn/radio/vovgt.png'
+        id: 'hanoi90',
+        name: 'FM Hanoi 90 MHz',
+        url: 'http://14.162.146.90:8000/HANOI90',
+        description: 'Đài Phát thanh Hà Nội'
     },
     {
-        id: 'vovfm',
-        name: 'VOV FM',
-        url: 'https://live.radiovietnam.vn/vovfm',
-        description: 'Kênh FM tổng hợp',
-        thumbnail: 'https://static.hat404.io.vn/radio/vovfm.png'
+        id: 'edm1',
+        name: 'Electronic Dance Music 24/7',
+        url: 'https://cast.magicstreams.gr:9111/stream',
+        description: 'EDM & Dance hits non-stop'
+    },
+    {
+        id: 'jazz1',
+        name: 'Smooth Jazz 24.7',
+        url: 'https://smoothjazz.cdnstream1.com/2585_128.mp3',
+        description: 'Relaxing Smooth Jazz'
+    },
+    {
+        id: 'chill1',
+        name: 'Chillout Lounge',
+        url: 'https://streams.ilovemusic.de/iloveradio17.mp3',
+        description: 'Electronic Chillout & Lounge'
     }
 ];
 
