@@ -23,7 +23,7 @@ npm install express cors zingmp3-api-full-v2 axios
 node server.js
 ```
 
-Server sẽ khởi động tại địa chỉ: `http://localhost:3000`
+Server sẽ khởi động tại địa chỉ: `http://localhost:3010`
 
 ## 3. Danh Sách API Endpoints
 
@@ -38,7 +38,7 @@ Tìm kiếm bài hát, nghệ sĩ, album theo từ khóa.
     *   `q`: Từ khóa tìm kiếm (Bắt buộc). Ví dụ: `Đen Vâu`.
 *   **Ví dụ Request:**
     ```
-    GET http://localhost:3000/api/search?q=Đen Vâu
+  GET http://localhost:3010/api/search?q=Đen Vâu
     ```
 *   **Response (JSON):**
     ```json
@@ -68,7 +68,7 @@ Lấy link phát nhạc (streaming URL) và thông tin chi tiết của một b�
     *   `id`: ID của bài hát (encodeId). Ví dụ: `Z6U0E0Z7`.
 *   **Ví dụ Request:**
     ```
-    GET http://localhost:3000/api/song/Z6U0E0Z7
+  GET http://localhost:3010/api/song/Z6U0E0Z7
     ```
 *   **Response (JSON):**
     ```json
@@ -89,7 +89,7 @@ Lấy danh sách Top 100 bài hát hot nhất hiện tại.
 *   **Method:** `GET`
 *   **Ví dụ Request:**
     ```
-    GET http://localhost:3000/api/top100
+  GET http://localhost:3010/api/top100
     ```
 *   **Response (JSON):**
     Trả về danh sách các bài hát trong Top 100, bao gồm thông tin chi tiết như tên, nghệ sĩ, album, thumbnail.
@@ -103,7 +103,7 @@ Dùng để proxy các luồng radio nếu gặp vấn đề về CORS hoặc c�
     *   `url`: URL của luồng radio cần proxy.
 *   **Ví dụ Request:**
     ```
-    GET http://localhost:3000/api/radio-proxy?url=https://stream.vov.vn/...
+  GET http://localhost:3010/api/radio-proxy?url=https://stream.vov.vn/...
     ```
 
 ## 4. Cấu Trúc File `server.js`

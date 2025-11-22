@@ -20,7 +20,7 @@ Mở terminal thứ nhất và chạy:
 ```bash
 node server.js
 ```
-Server sẽ chạy tại: **http://localhost:3000**
+Server sẽ chạy tại: **http://localhost:3010**
 
 ### Bước 3: Khởi động Frontend (React App)
 Mở terminal thứ hai và chạy:
@@ -77,7 +77,7 @@ zing-mp3-player/
 ## ⚙️ Cấu hình
 
 ### Thay đổi Port
-- **Backend**: Sửa `PORT` trong file `server.js` (mặc định: 3000)
+- **Backend**: Sửa `PORT` trong file `server.js` (mặc định: 3010)
 - **Frontend**: Vite tự động chọn port (mặc định: 5173)
 
 ### CORS
